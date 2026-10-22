@@ -23,7 +23,13 @@ class chitietsinhvien : AppCompatActivity() {
             insets
         }
         val ten = intent.getStringExtra("ten")
-        binding.tv.setText(ten)
+        val id = intent.getStringExtra("id")
+        val phong = intent.getStringExtra("phong")
+        val trangThai = intent.getStringExtra("trang thai")
+        binding.edtID.setText(id)
+        binding.ten.setText(ten)
+        binding.phong.setText(phong)
+        binding.trangthai.setText(trangThai)
         binding.btn.setOnClickListener { finish() }
     }
 }

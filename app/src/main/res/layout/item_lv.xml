@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:descendantFocusability="blocksDescendants"
+    android:gravity="center_vertical">
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="001"/>
+        <TextView
+            android:id="@+id/hoTen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nguyễn Công Tuấn"/>
+        <TextView
+            android:id="@+id/phongBan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kinh doanh"/>
+        <TextView
+            android:id="@+id/trangThai"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thực tập"/>
+    </LinearLayout>
+    <CheckBox
+        android:id="@+id/cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        />
+
+</LinearLayout>
