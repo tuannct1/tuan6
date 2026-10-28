@@ -9,7 +9,7 @@ import com.hvacpro.faultcodes.tuan6.R
 import com.hvacpro.faultcodes.tuan6.databinding.ActivityChitietsinhvienBinding
 import com.hvacpro.faultcodes.tuan6.databinding.ActivityMain2Binding
 
-class chitietsinhvien : AppCompatActivity() {
+public class chitietsinhvien : AppCompatActivity() {
     private lateinit var binding : ActivityChitietsinhvienBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

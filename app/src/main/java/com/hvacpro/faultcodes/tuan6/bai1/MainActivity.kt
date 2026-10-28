@@ -4,8 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.CheckBox
+import android.widget.ListAdapter
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
@@ -22,8 +24,8 @@ import com.hvacpro.faultcodes.tuan6.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     var select = false
-    var selectall = false
-    private lateinit var binding : ActivityMain2Binding
+    var selectall = 1
+    private lateinit var binding: ActivityMain2Binding
 
     val dsTen = mutableListOf<String>()
     val ds = mutableListOf<SinhVien>(
@@ -31,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         SinhVien("SV02", "Trần Thị B", "Kế toán", "Chính thức"),
         SinhVien("SV03", "Lê Văn C", "Kinh doanh", "Thực tập")
     )
-    private lateinit var adap : myAdaper
+    private lateinit var adap: myAdaper
     private val addStudentLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -42,9 +44,8 @@ class MainActivity : AppCompatActivity() {
             val phong = intent?.getStringExtra("phong") ?: ""
             val trangThai = intent?.getStringExtra("trang thai") ?: ""
             val sinhVien = SinhVien(id, ten, phong, trangThai)
-            ds.add(sinhVien)
-            adap = myAdaper(this,R.layout.item_lv, ds)
-            binding.lv.adapter = adap
+            adap.add(sinhVien)
+            adap.filter.filter("")
         }
     }
     private val updateStudentLauncher = registerForActivityResult(
@@ -56,15 +57,17 @@ class MainActivity : AppCompatActivity() {
             val id = intent?.getStringExtra("id") ?: ""
             val phong = intent?.getStringExtra("phong") ?: ""
             val trangThai = intent?.getStringExtra("trang thai") ?: ""
+            val position = intent?.getIntExtra("position", 0) ?: 0
             val sinhVien = SinhVien(id, ten, phong, trangThai)
-            val idx = ds.indexOfFirst { it.id == id }
+            val idx = ds.indexOf(adap.getItem(position))
             if (idx >= 0) {
                 ds[idx] = sinhVien
             }
-            adap = myAdaper(this,R.layout.item_lv, ds)
+            adap = myAdaper(this, R.layout.item_lv, ds)
             binding.lv.adapter = adap
         }
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -80,6 +83,8 @@ class MainActivity : AppCompatActivity() {
             binding.tbstart.visibility = View.GONE
             binding.tbselect.visibility = View.VISIBLE
             binding.tbsearch.visibility = View.GONE
+            //đổi chế độ chọn
+            binding.lv.choiceMode = ListView.CHOICE_MODE_MULTIPLE
             select = true
         }
         //nút cancle
@@ -89,13 +94,15 @@ class MainActivity : AppCompatActivity() {
             binding.tbsearch.visibility = View.GONE
             binding.lv.clearChoices()
             binding.tv.setText(binding.lv.checkedItemCount.toString())
+            //đổi chế độ chọn
+            binding.lv.choiceMode = ListView.CHOICE_MODE_NONE
             select = false
-            for(i in 0 until binding.lv.count){
+            for (i in 0 until binding.lv.count) {
                 cb(i)
             }
         }
         //tạo adaper
-        adap = myAdaper(this,R.layout.item_lv, ds)
+        adap = myAdaper(this, R.layout.item_lv, ds)
         binding.lv.adapter = adap
 
         //nút thêm sinh viên
@@ -103,39 +110,36 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, themsinhvien::class.java)
             addStudentLauncher.launch(intent)
         }
-        //đổi chế độ chọn
-        binding.lv.choiceMode = ListView.CHOICE_MODE_MULTIPLE
+
         //set sự kiên chọn item trong listview
         binding.lv.setOnItemClickListener { parent, view, position, id ->
-            if(!select) {
+            if (!select) {
                 val intent = Intent(this, chitietsinhvien::class.java)
-                startActivity(layThongTin(view, intent))
-            }
-            else{
+                startActivity(layThongTin(intent, position))
+            } else {
                 binding.tv.setText(binding.lv.checkedItemCount.toString())
                 cb(position)
             }
         }
         //nút chọn tất cả
         binding.selectall.setOnClickListener {
-            if(!selectall){
-                for(i in 0 until binding.lv.count){
-                    binding.lv.setItemChecked(i,true)
+            selectall = kiemtra()
+            if (selectall == 1 || selectall == 3) {
+                for (i in 0 until binding.lv.count) {
+                    binding.lv.setItemChecked(i, true)
                     cb(i)
                 }
-                selectall = true
+                selectall = 2
             }
-            else{
-                for(i in 0 until binding.lv.count){
-                    binding.lv.setItemChecked(i,false)
+            else if(selectall == 2){
+                for (i in 0 until binding.lv.count) {
+                    binding.lv.setItemChecked(i, false)
                     cb(i)
                 }
-                selectall = false
             }
-
             binding.tv.setText(binding.lv.checkedItemCount.toString())
         }
-
+        //Truyen adap vao autocomplete
         val adapTen = ArrayAdapter(this, android.R.layout.simple_list_item_1, dsTen)
         binding.editSearch.setAdapter(adapTen)
         //nút search
@@ -144,7 +148,7 @@ class MainActivity : AppCompatActivity() {
             binding.tbselect.visibility = View.GONE
             binding.tbsearch.visibility = View.VISIBLE
             dsTen.clear()
-            for(sinhVien in ds){
+            for (sinhVien in ds) {
                 dsTen.add(sinhVien.ten)
             }
         }
@@ -158,34 +162,34 @@ class MainActivity : AppCompatActivity() {
             binding.tbstart.visibility = View.VISIBLE
             binding.tbselect.visibility = View.GONE
             binding.tbsearch.visibility = View.GONE
+            dsTen.clear()
             binding.editSearch.setText("")
             adap.filter.filter("")
         }
         // nuts bin
         binding.bin.setOnClickListener {
             val a = binding.lv.checkedItemPositions
-            for(i in ds.size - 1 downTo 0){
-                if(a.get(i)){
-                    ds.removeAt(i)
+            for (i in ds.size - 1 downTo 0) {
+                if (a.get(i)) {
+                    adap.remove(adap.getItem(i))
                 }
             }
             adap.notifyDataSetChanged()
             binding.lv.clearChoices()
-            binding.tv.setText(binding.lv.checkedItemCount.toString())
+            binding.tv.text = binding.lv.checkedItemCount.toString()
         }
 
         //tạo popup
-        binding.lv.setOnItemLongClickListener{ parent, view, position, id ->
+        binding.lv.setOnItemLongClickListener { parent, view, position, id ->
             val popup = PopupMenu(this, view)
             popup.menuInflater.inflate(R.menu.popup, popup.menu)
-            popup.setOnMenuItemClickListener { item->
-                if(item.itemId == R.id.chinhSua){
+            popup.setOnMenuItemClickListener { item ->
+                if (item.itemId == R.id.chinhSua) {
                     val intent = Intent(this, themsinhvien::class.java)
-                    layThongTin(view, intent)
+                    layThongTin(intent, position)
                     updateStudentLauncher.launch(intent)
-                }
-                else{
-                    ds.removeAt(position)
+                } else {
+                    adap.remove(adap.getItem(position))
                     adap.notifyDataSetChanged()
                 }
                 true
@@ -194,29 +198,44 @@ class MainActivity : AppCompatActivity() {
             true
         }
     }
-    fun layThongTin(view:View, intent: Intent) : Intent{
-        val id = view.findViewById<TextView>(R.id.id).text.toString()
-        val ten = view.findViewById<TextView>(R.id.hoTen).text.toString()
-        val phong = view.findViewById<TextView>(R.id.phongBan).text.toString()
-        val trangThai = view.findViewById<TextView>(R.id.trangThai).text.toString()
+
+    fun layThongTin(intent: Intent, position: Int): Intent {
+        val sinhVien = adap.getItem(position)
+        val id = sinhVien?.id
+        val ten = sinhVien?.ten
+        val phong = sinhVien?.tenPhong
+        val trangThai = sinhVien?.trangThai
         intent.putExtra("ten", ten)
         intent.putExtra("id", id)
         intent.putExtra("phong", phong)
         intent.putExtra("trang thai", trangThai)
+        intent.putExtra("position", position)
         return intent
     }
-    fun cb(position: Int){
+
+    fun cb(position: Int) {
         val a = binding.lv.firstVisiblePosition
         val b = position - a
         val item = binding.lv.getChildAt(b)
         val cb = item.findViewById<CheckBox>(R.id.cb)
-        if(binding.lv.isItemChecked(position)){
+        if (binding.lv.isItemChecked(position)) {
             cb.visibility = View.VISIBLE
             cb.isChecked = true
-        }
-        else{
+        } else {
             cb.visibility = View.GONE
             cb.isChecked = false
         }
     }
+
+    fun kiemtra(): Int {
+        if (binding.lv.checkedItemCount == 0) {
+            return 1
+        } else if (binding.lv.count == binding.lv.checkedItemCount) {
+            return 2
+        } else if (binding.lv.checkedItemCount < binding.lv.count) {
+            return 3
+        }
+        return 0
+    }
+
 }

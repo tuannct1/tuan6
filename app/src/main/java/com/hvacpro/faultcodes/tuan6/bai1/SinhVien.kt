@@ -1,6 +1,6 @@
 package com.hvacpro.faultcodes.tuan6.bai1
 
-public class SinhVien {
+class SinhVien {
     var id = ""
     var ten =""
     var tenPhong = ""

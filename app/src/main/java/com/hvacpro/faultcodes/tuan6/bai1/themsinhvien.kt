@@ -12,7 +12,7 @@ import com.hvacpro.faultcodes.tuan6.databinding.ActivityMain2Binding
 import com.hvacpro.faultcodes.tuan6.databinding.ActivityMainBinding
 import com.hvacpro.faultcodes.tuan6.databinding.ActivityThemsinhvienBinding
 
-class themsinhvien : AppCompatActivity() {
+public class themsinhvien : AppCompatActivity() {
     val dsPhong = mutableListOf<String>("Kinh doanh", "Dev", "Kế toán")
     val dsTrangThai = mutableListOf<String>("Chính thức", "Thực tập")
     private lateinit var binding : ActivityThemsinhvienBinding
@@ -35,6 +35,7 @@ class themsinhvien : AppCompatActivity() {
         val id = intent.getStringExtra("id")
         val phong = intent.getStringExtra("phong")
         val trangThai = intent.getStringExtra("trang thai")
+        val position = intent.getIntExtra("position", -1)
         binding.edtID.setText(id)
         binding.ten.setText(ten)
         when(phong){
@@ -53,6 +54,7 @@ class themsinhvien : AppCompatActivity() {
             intent.putExtra("ten",binding.ten.text.toString())
             intent.putExtra("phong",binding.phong.selectedItem.toString())
             intent.putExtra("trang thai",binding.trangthai.selectedItem.toString())
+            intent.putExtra("position",position)
             setResult(RESULT_OK, intent)
             finish()
         }
