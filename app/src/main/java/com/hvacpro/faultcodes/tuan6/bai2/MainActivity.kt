@@ -15,32 +15,32 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hvacpro.faultcodes.tuan6.R
-import com.hvacpro.faultcodes.tuan6.bai1.SinhVien
-import com.hvacpro.faultcodes.tuan6.bai1.chitietsinhvien
-import com.hvacpro.faultcodes.tuan6.bai1.themsinhvien
+import com.hvacpro.faultcodes.tuan6.bai1.AddStudent
+import com.hvacpro.faultcodes.tuan6.bai1.Student
+import com.hvacpro.faultcodes.tuan6.bai1.StudentDetail
 import com.hvacpro.faultcodes.tuan6.databinding.ActivityMain4Binding
 
 class MainActivity : AppCompatActivity() {
-    var select = false
-    var selectall = 1
+    var selectStatus = false
+    var selectAllStatus = 1
     val dsTen = mutableListOf<String>()
     val setTen= mutableSetOf<String>()
     private lateinit var adapTen: ArrayAdapter<String>
 
-    val ds = mutableListOf<SinhVien>(
-        SinhVien("SV01", "Nguyễn Văn A", "Dev", "Chính thức"),
-        SinhVien("SV02", "Trần Thị B", "Kế toán", "Chính thức"),
-        SinhVien("SV03", "Lê Văn C", "Kinh doanh", "Thực tập")
+    val ds = mutableListOf<Student>(
+        Student("SV01", "Nguyễn Văn A", "Dev", "Chính thức"),
+        Student("SV02", "Trần Thị B", "Kế toán", "Chính thức"),
+        Student("SV03", "Lê Văn C", "Kinh doanh", "Thực tập")
     )
     val adap = myAdaper(ds,
-        onClick = {sv->xemtt(sv)},
-        onLongClick ={sv, view ->hienpopup(sv, view)}
+        onClick = {sv->showInfo(sv)},
+        onLongClick ={sv, view ->showPopup(sv, view)}
     )
-    fun xemtt(sv: SinhVien){
-        if(!select){
-            val intent = Intent(this, chitietsinhvien::class.java)
-            layThongTin(intent, sv)
-            startActivity(layThongTin(intent, sv))
+    fun showInfo(sv: Student){
+        if(!selectStatus){
+            val intent = Intent(this, StudentDetail::class.java)
+            getStudentInfo(intent, sv)
+            startActivity(getStudentInfo(intent, sv))
         }
         else{
             val a = ds.indexOf(sv)
@@ -55,13 +55,13 @@ class MainActivity : AppCompatActivity() {
             binding.tv.text = adap.dsSelect.size.toString()
         }
     }
-    fun hienpopup(sv: SinhVien, view:View){
+    fun showPopup(sv: Student, view:View){
         val popup = PopupMenu(this, view)
         popup.menuInflater.inflate(R.menu.popup, popup.menu)
         popup.setOnMenuItemClickListener { item ->
             if (item.itemId == R.id.chinhSua) {
-                val intent = Intent(this, themsinhvien::class.java)
-                updateStudentLauncher.launch(layThongTin(intent, sv))
+                val intent = Intent(this, AddStudent::class.java)
+                updateStudentLauncher.launch(getStudentInfo(intent, sv))
             } else {
                 val pos = adap.getPosition(sv)
                 adap.xoa(sv)
@@ -76,15 +76,15 @@ class MainActivity : AppCompatActivity() {
     ) { result ->
         if (result.resultCode == RESULT_OK) {
             val intent = result.data
-            val ten = intent?.getStringExtra("ten") ?: ""
+            val ten = intent?.getStringExtra("name") ?: ""
             val id = intent?.getStringExtra("id") ?: ""
-            val phong = intent?.getStringExtra("phong") ?: ""
-            val trangThai = intent?.getStringExtra("trang thai") ?: ""
+            val phong = intent?.getStringExtra("room") ?: ""
+            val trangThai = intent?.getStringExtra("status") ?: ""
             val position = intent?.getIntExtra("position", 0) ?: 0
-            val sinhVien = SinhVien(id, ten, phong, trangThai)
+            val student = Student(id, ten, phong, trangThai)
 
             if (position >= 0) {
-                adap.upDate(position, sinhVien)
+                adap.upDate(position, student)
                 adap.notifyItemChanged(position)
             }
         }
@@ -94,14 +94,14 @@ class MainActivity : AppCompatActivity() {
     ) { result ->
         if (result.resultCode == RESULT_OK) {
             val intent = result.data
-            val ten = intent?.getStringExtra("ten") ?: ""
+            val ten = intent?.getStringExtra("name") ?: ""
             val id = intent?.getStringExtra("id") ?: ""
-            val phong = intent?.getStringExtra("phong") ?: ""
-            val trangThai = intent?.getStringExtra("trang thai") ?: ""
-            val sinhVien = SinhVien(id, ten, phong, trangThai)
-            adap.add(sinhVien)
-            val a = ds.indexOf(sinhVien)
-            adap.notifyItemInserted(adap.getPosition(sinhVien))
+            val phong = intent?.getStringExtra("room") ?: ""
+            val trangThai = intent?.getStringExtra("status") ?: ""
+            val student = Student(id, ten, phong, trangThai)
+            adap.add(student)
+            val a = ds.indexOf(student)
+            adap.notifyItemInserted(adap.getPosition(student))
         }
     }
     private lateinit var binding: ActivityMain4Binding
@@ -129,14 +129,14 @@ class MainActivity : AppCompatActivity() {
             binding.tbstart.visibility = View.GONE
             binding.tbselect.visibility = View.VISIBLE
             binding.tbsearch.visibility = View.GONE
-            select = true
+            selectStatus = true
         }
         //nút cancle
         binding.cancel.setOnClickListener {
             binding.tbstart.visibility = View.VISIBLE
             binding.tbselect.visibility = View.GONE
             binding.tbsearch.visibility = View.GONE
-            select = false
+            selectStatus = false
             adap.dsSelect.clear()
             adap.notifyDataSetChanged()
             binding.tv.text = adap.dsSelect.size.toString()
@@ -149,7 +149,7 @@ class MainActivity : AppCompatActivity() {
             adapTen.clear()
             setTen.clear()
             for(i in ds){
-                setTen.add(i.ten)
+                setTen.add(i.name)
             }
             for(i in setTen){
                adapTen.add(i)
@@ -174,27 +174,26 @@ class MainActivity : AppCompatActivity() {
         }
         //Them sinh vien
         binding.btnThem.setOnClickListener {
-            val intent = Intent(this, themsinhvien::class.java)
+            val intent = Intent(this, AddStudent::class.java)
             addStudentLauncher.launch(intent)
         }
         //Chon tat ca
         binding.selectall.setOnClickListener {
-            selectall = kiemtra()
-            if(selectall == 1 || selectall == 3){
+            selectAllStatus = checkSelectAllStatus()
+            if(selectAllStatus == 1 || selectAllStatus == 3){
                 for(i in ds){
                     adap.dsSelect.add(i.id)
                 }
-                selectall = 2
+                selectAllStatus = 2
                 adap.notifyDataSetChanged()
                 binding.tv.text = adap.dsSelect.size.toString()
             }
-            else if(selectall == 2){
+            else if(selectAllStatus == 2){
                 adap.dsSelect.clear()
-                selectall = 1
+                selectAllStatus = 1
                 adap.notifyDataSetChanged()
                 binding.tv.text = adap.dsSelect.size.toString()
             }
-
         }
         //nút bin
         binding.bin.setOnClickListener {
@@ -215,19 +214,19 @@ class MainActivity : AppCompatActivity() {
             adap.notifyDataSetChanged()
         }
     }
-    fun layThongTin(intent: Intent,sinhVien: SinhVien): Intent {
-        val id = sinhVien.id
-        val ten = sinhVien.ten
-        val phong = sinhVien.tenPhong
-        val trangThai = sinhVien.trangThai
-        intent.putExtra("ten", ten)
+    fun getStudentInfo(intent: Intent, student: Student): Intent {
+        val id = student.id
+        val ten = student.name
+        val phong = student.room
+        val trangThai = student.status
+        intent.putExtra("name", ten)
         intent.putExtra("id", id)
-        intent.putExtra("phong", phong)
-        intent.putExtra("trang thai", trangThai)
-        intent.putExtra("position", adap.getPosition(sinhVien))
+        intent.putExtra("room", phong)
+        intent.putExtra("status", trangThai)
+        intent.putExtra("position", adap.getPosition(student))
         return intent
     }
-    fun kiemtra(): Int {
+    fun checkSelectAllStatus(): Int {
         if (adap.dsSelect.isEmpty()) {
             return 1
         } else if (adap.dsSelect.size == ds.size) {

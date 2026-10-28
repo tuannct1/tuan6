@@ -7,9 +7,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.hvacpro.faultcodes.tuan6.R
 import com.hvacpro.faultcodes.tuan6.databinding.ActivityChitietsinhvienBinding
-import com.hvacpro.faultcodes.tuan6.databinding.ActivityMain2Binding
 
-public class chitietsinhvien : AppCompatActivity() {
+public class StudentDetail : AppCompatActivity() {
     private lateinit var binding : ActivityChitietsinhvienBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,10 +21,10 @@ public class chitietsinhvien : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val ten = intent.getStringExtra("ten")
+        val ten = intent.getStringExtra("name")
         val id = intent.getStringExtra("id")
-        val phong = intent.getStringExtra("phong")
-        val trangThai = intent.getStringExtra("trang thai")
+        val phong = intent.getStringExtra("room")
+        val trangThai = intent.getStringExtra("status")
         binding.edtID.setText(id)
         binding.ten.setText(ten)
         binding.phong.setText(phong)

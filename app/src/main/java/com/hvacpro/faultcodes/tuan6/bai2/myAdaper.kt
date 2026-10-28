@@ -9,15 +9,15 @@ import android.widget.Filterable
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.hvacpro.faultcodes.tuan6.R
-import com.hvacpro.faultcodes.tuan6.bai1.SinhVien
+import com.hvacpro.faultcodes.tuan6.bai1.Student
 
-class myAdaper(private val ds: MutableList<SinhVien>,
-               private val onClick: ((SinhVien)-> Unit),
-               private val onLongClick: ((SinhVien, View)-> Unit)
+class myAdaper(private val ds: MutableList<Student>,
+               private val onClick: ((Student)-> Unit),
+               private val onLongClick: ((Student, View)-> Unit)
 
 ) : RecyclerView.Adapter<myAdaper.VH>(), Filterable{
     val dsSelect = mutableSetOf<String>()
-    var dsHien: MutableList<SinhVien> = ds.toMutableList()
+    var dsHien: MutableList<Student> = ds.toMutableList()
     fun filter(s:String){
         if(s == ""){
             dsHien.clear()
@@ -28,25 +28,25 @@ class myAdaper(private val ds: MutableList<SinhVien>,
         else{
             dsHien.clear()
             for(i in ds){
-                if(i.ten == s){
+                if(i.name == s){
                     dsHien.add(i)
                 }
             }
         }
     }
-    fun xoa(sv:SinhVien?){
+    fun xoa(sv:Student?){
         ds.remove(sv)
         dsHien.remove(sv)
     }
-    fun upDate(idx: Int, sinhVien: SinhVien){
+    fun upDate(idx: Int, student: Student){
         val a = ds.indexOf(dsHien[idx])
-        ds[a] = sinhVien
-        dsHien[idx] = sinhVien
+        ds[a] = student
+        dsHien[idx] = student
     }
-    fun getPosition(sv: SinhVien): Int {
+    fun getPosition(sv: Student): Int {
         return dsHien.indexOf(sv)
     }
-    fun add(sv: SinhVien){
+    fun add(sv: Student){
         ds.add(sv)
         dsHien.add(sv)
     }
@@ -85,11 +85,11 @@ class myAdaper(private val ds: MutableList<SinhVien>,
         holder: VH,
         position: Int
     ) {
-        val sv = dsHien.get(position)
-        holder.ten.text = sv.ten
+        val sv = dsHien[position]
+        holder.ten.text = sv.name
         holder.id.text = sv.id
-        holder.phong.text = sv.tenPhong
-        holder.trangThai.text = sv.trangThai
+        holder.phong.text = sv.room
+        holder.trangThai.text = sv.status
         if(dsSelect.contains(sv.id)){
             holder.cb.isChecked = true
             holder.cb.visibility = View.VISIBLE

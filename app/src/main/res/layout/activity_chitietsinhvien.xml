@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".bai1.chitietsinhvien"
+    tools:context=".bai1.StudentDetail"
     android:orientation="vertical">
     <TextView
         android:layout_width="wrap_content"

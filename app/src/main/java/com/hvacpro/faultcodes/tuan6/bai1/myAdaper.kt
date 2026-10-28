@@ -5,11 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.Filter
 import android.widget.TextView
 import com.hvacpro.faultcodes.tuan6.R
 
-class myAdaper(context: Context,private val resource: Int,private val objects: List<SinhVien>) : ArrayAdapter<SinhVien>(context, resource, objects) {
+class myAdaper(context: Context,private val resource: Int,private val objects: List<Student>) : ArrayAdapter<Student>(context, resource, objects) {
+
+
+    fun getListName(): List<String>{
+        val setName = mutableSetOf<String>()
+        val listName = mutableListOf<String>()
+        for(i in objects){
+            setName.add(i.name)
+        }
+        for(i in setName){
+            listName.add(i)
+        }
+        return listName
+    }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.item_lv, parent, false)
@@ -20,10 +32,10 @@ class myAdaper(context: Context,private val resource: Int,private val objects: L
         val tvPhong = view.findViewById<TextView>(R.id.phongBan)
         val tvTrangThai = view.findViewById<TextView>(R.id.trangThai)
 
-        tvID.setText(sinhvien?.id.toString())
-        tvHOTen.setText(sinhvien?.ten.toString())
-        tvPhong.setText(sinhvien?.tenPhong.toString())
-        tvTrangThai.setText(sinhvien?.trangThai.toString())
+        tvID.text = sinhvien?.id.toString()
+        tvHOTen.text = sinhvien?.name.toString()
+        tvPhong.text = sinhvien?.room.toString()
+        tvTrangThai.text = sinhvien?.status.toString()
         return view
     }
 }

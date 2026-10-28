@@ -8,13 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.hvacpro.faultcodes.tuan6.R
-import com.hvacpro.faultcodes.tuan6.databinding.ActivityMain2Binding
-import com.hvacpro.faultcodes.tuan6.databinding.ActivityMainBinding
 import com.hvacpro.faultcodes.tuan6.databinding.ActivityThemsinhvienBinding
 
-public class themsinhvien : AppCompatActivity() {
-    val dsPhong = mutableListOf<String>("Kinh doanh", "Dev", "Kế toán")
-    val dsTrangThai = mutableListOf<String>("Chính thức", "Thực tập")
+public class AddStudent : AppCompatActivity() {
+    val dsPhong = mutableListOf("Kinh doanh", "Dev", "Kế toán")
+    val dsTrangThai = mutableListOf("Chính thức", "Thực tập")
     private lateinit var binding : ActivityThemsinhvienBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,10 +29,10 @@ public class themsinhvien : AppCompatActivity() {
         binding.phong.adapter = adapPhong
         binding.trangthai.adapter = adapTrangThai
 
-        val ten = intent.getStringExtra("ten")
+        val ten = intent.getStringExtra("name")
         val id = intent.getStringExtra("id")
-        val phong = intent.getStringExtra("phong")
-        val trangThai = intent.getStringExtra("trang thai")
+        val phong = intent.getStringExtra("room")
+        val trangThai = intent.getStringExtra("status")
         val position = intent.getIntExtra("position", -1)
         binding.edtID.setText(id)
         binding.ten.setText(ten)
@@ -51,9 +49,9 @@ public class themsinhvien : AppCompatActivity() {
         binding.btn.setOnClickListener {
             val intent = Intent()
             intent.putExtra("id",binding.edtID.text.toString())
-            intent.putExtra("ten",binding.ten.text.toString())
-            intent.putExtra("phong",binding.phong.selectedItem.toString())
-            intent.putExtra("trang thai",binding.trangthai.selectedItem.toString())
+            intent.putExtra("name",binding.ten.text.toString())
+            intent.putExtra("room",binding.phong.selectedItem.toString())
+            intent.putExtra("status",binding.trangthai.selectedItem.toString())
             intent.putExtra("position",position)
             setResult(RESULT_OK, intent)
             finish()
