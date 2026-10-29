@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.hvacpro.faultcodes.tuan6.R
 
-class myAdaper(context: Context,private val resource: Int,private val objects: List<Student>) : ArrayAdapter<Student>(context, resource, objects) {
+class MyAdapter(context: Context, private val resource: Int, private val objects: List<Student>) : ArrayAdapter<Student>(context, resource, objects) {
 
 
     fun getListName(): List<String>{
@@ -25,17 +25,17 @@ class myAdaper(context: Context,private val resource: Int,private val objects: L
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.item_lv, parent, false)
-        val sinhvien = getItem(position)
+        val student = getItem(position)
 
         val tvID = view.findViewById<TextView>(R.id.id)
-        val tvHOTen = view.findViewById<TextView>(R.id.hoTen)
-        val tvPhong = view.findViewById<TextView>(R.id.phongBan)
-        val tvTrangThai = view.findViewById<TextView>(R.id.trangThai)
+        val tvName = view.findViewById<TextView>(R.id.hoTen)
+        val tvRoom = view.findViewById<TextView>(R.id.phongBan)
+        val tvStatus = view.findViewById<TextView>(R.id.trangThai)
 
-        tvID.text = sinhvien?.id.toString()
-        tvHOTen.text = sinhvien?.name.toString()
-        tvPhong.text = sinhvien?.room.toString()
-        tvTrangThai.text = sinhvien?.status.toString()
+        tvID.text = student?.id.toString()
+        tvName.text = student?.name.toString()
+        tvRoom.text = student?.room.toString()
+        tvStatus.text = student?.status.toString()
         return view
     }
 }

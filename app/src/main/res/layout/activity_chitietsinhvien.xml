@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:text="Nhâp tên"/>
     <EditText
-        android:id="@+id/ten"
+        android:id="@+id/name"
         android:layout_width="300dp"
         android:layout_height="wrap_content"/>
     <TextView
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:text="Chọn phòng ban"/>
     <EditText
-        android:id="@+id/phong"
+        android:id="@+id/room"
         android:layout_width="300dp"
         android:layout_height="wrap_content"/>
     <TextView
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:text="Chọn trạng thái"/>
     <EditText
-        android:id="@+id/trangthai"
+        android:id="@+id/status"
         android:layout_width="300dp"
         android:layout_height="wrap_content"/>
     <Button

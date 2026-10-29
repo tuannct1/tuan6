@@ -21,14 +21,14 @@ public class StudentDetail : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val ten = intent.getStringExtra("name")
+        val name = intent.getStringExtra("name")
         val id = intent.getStringExtra("id")
-        val phong = intent.getStringExtra("room")
-        val trangThai = intent.getStringExtra("status")
+        val room = intent.getStringExtra("room")
+        val status = intent.getStringExtra("status")
         binding.edtID.setText(id)
-        binding.ten.setText(ten)
-        binding.phong.setText(phong)
-        binding.trangthai.setText(trangThai)
+        binding.name.setText(name)
+        binding.room.setText(room)
+        binding.status.setText(status)
         binding.btn.setOnClickListener { finish() }
     }
 }

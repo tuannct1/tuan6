@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         Student("SV02", "Trần Thị B", "Kế toán", "Chính thức"),
         Student("SV03", "Lê Văn C", "Kinh doanh", "Thực tập")
     )
-    private lateinit var adap: myAdaper
+    private lateinit var adap: MyAdapter
     private val addStudentLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             if (idx >= 0) {
                 ds[idx] = student
             }
-            adap = myAdaper(this, R.layout.item_lv, ds)
+            adap = MyAdapter(this, R.layout.item_lv, ds)
             binding.lv.adapter = adap
         }
     }
@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         //tạo adaper
-        adap = myAdaper(this, R.layout.item_lv, ds)
+        adap = MyAdapter(this, R.layout.item_lv, ds)
         binding.lv.adapter = adap
 
         //nút thêm sinh viên

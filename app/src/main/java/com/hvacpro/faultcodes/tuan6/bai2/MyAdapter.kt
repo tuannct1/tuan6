@@ -11,11 +11,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.hvacpro.faultcodes.tuan6.R
 import com.hvacpro.faultcodes.tuan6.bai1.Student
 
-class myAdaper(private val ds: MutableList<Student>,
-               private val onClick: ((Student)-> Unit),
-               private val onLongClick: ((Student, View)-> Unit)
+class MyAdapter(private val ds: MutableList<Student>,
+                private val onClick: ((Student)-> Unit),
+                private val onLongClick: ((Student, View)-> Unit)
 
-) : RecyclerView.Adapter<myAdaper.VH>(), Filterable{
+) : RecyclerView.Adapter<MyAdapter.VH>(), Filterable{
     val dsSelect = mutableSetOf<String>()
     var dsHien: MutableList<Student> = ds.toMutableList()
     fun filter(s:String){

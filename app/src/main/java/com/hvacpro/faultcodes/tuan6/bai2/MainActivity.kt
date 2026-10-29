@@ -22,7 +22,7 @@ import com.hvacpro.faultcodes.tuan6.databinding.ActivityMain4Binding
 
 class MainActivity : AppCompatActivity() {
     var selectStatus = false
-    var selectAllStatus = 1
+    var selectAllStatus = "NONE"
     val dsTen = mutableListOf<String>()
     val setTen= mutableSetOf<String>()
     private lateinit var adapTen: ArrayAdapter<String>
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
         Student("SV02", "Trần Thị B", "Kế toán", "Chính thức"),
         Student("SV03", "Lê Văn C", "Kinh doanh", "Thực tập")
     )
-    val adap = myAdaper(ds,
+    val adap = MyAdapter(ds,
         onClick = {sv->showInfo(sv)},
         onLongClick ={sv, view ->showPopup(sv, view)}
     )
@@ -180,17 +180,17 @@ class MainActivity : AppCompatActivity() {
         //Chon tat ca
         binding.selectall.setOnClickListener {
             selectAllStatus = checkSelectAllStatus()
-            if(selectAllStatus == 1 || selectAllStatus == 3){
+            if(selectAllStatus == "NONE" || selectAllStatus == "PARTIAL"){
                 for(i in ds){
                     adap.dsSelect.add(i.id)
                 }
-                selectAllStatus = 2
+                selectAllStatus = "ALL"
                 adap.notifyDataSetChanged()
                 binding.tv.text = adap.dsSelect.size.toString()
             }
-            else if(selectAllStatus == 2){
+            else if(selectAllStatus == "ALL"){
                 adap.dsSelect.clear()
-                selectAllStatus = 1
+                selectAllStatus = "NONE"
                 adap.notifyDataSetChanged()
                 binding.tv.text = adap.dsSelect.size.toString()
             }
@@ -216,24 +216,24 @@ class MainActivity : AppCompatActivity() {
     }
     fun getStudentInfo(intent: Intent, student: Student): Intent {
         val id = student.id
-        val ten = student.name
-        val phong = student.room
-        val trangThai = student.status
-        intent.putExtra("name", ten)
+        val name = student.name
+        val room = student.room
+        val status = student.status
+        intent.putExtra("name", name)
         intent.putExtra("id", id)
-        intent.putExtra("room", phong)
-        intent.putExtra("status", trangThai)
+        intent.putExtra("room", room)
+        intent.putExtra("status", status)
         intent.putExtra("position", adap.getPosition(student))
         return intent
     }
-    fun checkSelectAllStatus(): Int {
+    fun checkSelectAllStatus(): String {
         if (adap.dsSelect.isEmpty()) {
-            return 1
+            return "NONE"
         } else if (adap.dsSelect.size == ds.size) {
-            return 2
+            return "ALL"
         } else if (adap.dsSelect.size < ds.size) {
-            return 3
+            return "PARTIAL"
         }
-        return 0
+        return ""
     }
 }
