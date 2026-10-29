@@ -51,10 +51,10 @@ class MyAdapter(private val ds: MutableList<Student>,
         dsHien.add(sv)
     }
     inner class VH(itemView: View): RecyclerView.ViewHolder(itemView){
-        val ten = itemView.findViewById<TextView>(R.id.hoTen)
+        val name = itemView.findViewById<TextView>(R.id.name)
         val id = itemView.findViewById<TextView>(R.id.id)
-        val phong = itemView.findViewById<TextView>(R.id.phongBan)
-        val trangThai = itemView.findViewById<TextView>(R.id.trangThai)
+        val room = itemView.findViewById<TextView>(R.id.room)
+        val status = itemView.findViewById<TextView>(R.id.status)
         val cb = itemView.findViewById<CheckBox>(R.id.cb)
         init {
             itemView.setOnClickListener {
@@ -86,10 +86,10 @@ class MyAdapter(private val ds: MutableList<Student>,
         position: Int
     ) {
         val sv = dsHien[position]
-        holder.ten.text = sv.name
+        holder.name.text = sv.name
         holder.id.text = sv.id
-        holder.phong.text = sv.room
-        holder.trangThai.text = sv.status
+        holder.room.text = sv.room
+        holder.status.text = sv.status
         if(dsSelect.contains(sv.id)){
             holder.cb.isChecked = true
             holder.cb.visibility = View.VISIBLE

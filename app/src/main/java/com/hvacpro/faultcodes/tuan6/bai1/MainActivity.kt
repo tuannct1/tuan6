@@ -20,7 +20,6 @@ class MainActivity : AppCompatActivity() {
     var selectAllStatus = 1
     private lateinit var binding: ActivityMain2Binding
 
-    val dsTen = mutableListOf<String>()
     val ds = mutableListOf<Student>(
         Student("SV01", "Nguyễn Văn A", "Dev", "Chính thức"),
         Student("SV02", "Trần Thị B", "Kế toán", "Chính thức"),
@@ -151,7 +150,7 @@ class MainActivity : AppCompatActivity() {
             binding.tbstart.visibility = View.VISIBLE
             binding.tbselect.visibility = View.GONE
             binding.tbsearch.visibility = View.GONE
-            dsTen.clear()
+            adap.clearListName()
             binding.editSearch.setText("")
             adap.filter.filter("")
         }
@@ -175,7 +174,6 @@ class MainActivity : AppCompatActivity() {
             popup.setOnMenuItemClickListener { item ->
                 if (item.itemId == R.id.chinhSua) {
                     val intent = Intent(this, AddStudent::class.java)
-                    getInfoStudent(intent, position)
                     updateStudentLauncher.launch(getInfoStudent(intent, position))
                 } else {
                     adap.remove(adap.getItem(position))

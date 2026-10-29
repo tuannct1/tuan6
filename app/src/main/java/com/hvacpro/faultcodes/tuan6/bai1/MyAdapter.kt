@@ -10,10 +10,9 @@ import com.hvacpro.faultcodes.tuan6.R
 
 class MyAdapter(context: Context, private val resource: Int, private val objects: List<Student>) : ArrayAdapter<Student>(context, resource, objects) {
 
-
+    val listName = mutableListOf<String>()
     fun getListName(): List<String>{
         val setName = mutableSetOf<String>()
-        val listName = mutableListOf<String>()
         for(i in objects){
             setName.add(i.name)
         }
@@ -22,15 +21,17 @@ class MyAdapter(context: Context, private val resource: Int, private val objects
         }
         return listName
     }
-
+    fun clearListName(){
+        listName.clear()
+    }
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.item_lv, parent, false)
         val student = getItem(position)
 
         val tvID = view.findViewById<TextView>(R.id.id)
-        val tvName = view.findViewById<TextView>(R.id.hoTen)
-        val tvRoom = view.findViewById<TextView>(R.id.phongBan)
-        val tvStatus = view.findViewById<TextView>(R.id.trangThai)
+        val tvName = view.findViewById<TextView>(R.id.name)
+        val tvRoom = view.findViewById<TextView>(R.id.room)
+        val tvStatus = view.findViewById<TextView>(R.id.status)
 
         tvID.text = student?.id.toString()
         tvName.text = student?.name.toString()
